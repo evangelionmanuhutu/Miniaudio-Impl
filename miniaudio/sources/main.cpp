@@ -6,40 +6,57 @@
 int main()
 {
 	AudioEngine audioEngine;
-	audioEngine.Init();
+	if (audioEngine.Init() == false)
+		return 0;
 
-	const char* filepath = "resources/audio.mp3";
-	AudioSource audio(filepath);
+	AudioSource audioSource("resources/audio.mp3");
 
-	char input;
+	char inp;
 	float volume = 1.0f;
+	float pan = 0.0f;
+
 	while (true)
 	{
-		printf("Press p(Play) s(Stop) q(Exit) e(volUP) r(volDWN): ");
+		printf("Audio Volume : %.1f\n", volume);
+		printf("Audio Panning: %.1f\n", pan);
 
-		input = getchar();
-		if (input == 'p')
-			audio.Play();
-		else if (input == 's')
-			audio.Stop();
-		else if (input == 'q')
+		printf("P : Play\n");
+		printf("S : Stop\n");
+		printf("E : Increase Volume\n");
+		printf("Q : Decrease Volume\n");
+		printf("D : Panning to Right");
+		printf("A : Panning to Left");
+		printf("X : Exit\n");
+
+		inp = getchar();
+		system("cls");
+
+		if (inp == 'x')
 			break;
 
-		else if (input == 'e')
+		if (inp == 'p')
+			audioSource.Play();
+		else if (inp == 's')
+			audioSource.Stop();
+
+		if (inp == 'e')
 			volume += 0.1f;
-		else if (input == 'r')
+		else if (inp == 'q')
 			volume -= 0.1f;
 
-		if (volume < 0.0f)
-			volume = 0.0f;
-		else if (volume > 1.0f)
-			volume = 1.0f;
+		if (volume > 1.0f)volume = 1.0f;
+		else if (volume < 0.0f) volume = 0.0f;
 
-		audio.SetVolume(volume);
+		audioSource.SetVolume(volume);
+
+		if (inp == 'a')
+			pan -= 0.1f;
+		else if (inp == 'd')
+			pan += 0.1f;
+
+		audioSource.SetPan(pan);
 	}
 
 	audioEngine.Shutdown();
-	getchar();
-
 	return 0;
 }

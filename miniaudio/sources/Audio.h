@@ -1,12 +1,14 @@
 #pragma once
 #include "miniaudio/miniaudio.h"
 
+#include <string>
+
 class AudioEngine
 {
 public:
 	AudioEngine();
 
-	void Init();
+	bool Init();
 	void Shutdown();
 
 	static AudioEngine* s_Instance;
@@ -22,17 +24,25 @@ private:
 class AudioSource
 {
 public:
-	AudioSource(const char* filepath, bool spatilazing = false);
+	AudioSource(std::string filepath, bool spatilazing = false);
 	~AudioSource();
 
 	void Play();
 	void Stop();
 	void SetVolume(float volume);
+	void SetPan(float panning);
+	void SetPosition(float x, float y, float z);
+
+	const std::string& GetFilepath() { return m_Filepath; }
 
 private:
-	const char* m_Filepath = "";
+	std::string m_Filepath;
+
 	ma_sound m_Sound;
 	float m_Volume = 1.0f;
+
+	// center panning
+	float m_Pan = 0.0f;
 };
 
 class AudioListener
